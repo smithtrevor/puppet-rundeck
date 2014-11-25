@@ -71,6 +71,7 @@ class rundeck::config(
     group   => $group,
     mode    => '0640',
     content => template($auth_template),
+    notify  => Service[$service_name],
     require => File[$properties_dir]
   }
 
