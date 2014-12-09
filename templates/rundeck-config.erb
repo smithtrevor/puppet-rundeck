@@ -20,16 +20,16 @@ dataSource {
 grails.mail.host = "<%= @mail_config['host'] %>"
 <%- end -%>
 <%- if @mail_config['port'] %>
-grails.mail.port = "<%= @email_config['port'] %>"
+grails.mail.port = "<%= @mail_config['port'] %>"
 <%- end -%>
 <%- if @mail_config['defaults.from'] %>
-grails.mail.default.from = "<%= @email_config['defaults.from'] %>"
+grails.mail.default.from = "<%= @mail_config['defaults.from'] %>"
 <%- end -%>
 <%- if @mail_config['username'] %>
-grails.mail.username = "<%= @email_config['username'] %>"
+grails.mail.username = "<%= @mail_config['username'] %>"
 <%- end -%>
 <%- if @mail_config['password'] %>
-grails.mail.password = "<%= @email_config['password'] %>"
+grails.mail.password = "<%= @mail_config['password'] %>"
 <%- end -%>
 
 grails.serverURL = "<%= @grails_server_url %>"
