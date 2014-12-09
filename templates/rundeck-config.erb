@@ -16,20 +16,21 @@ dataSource {
   <%- end -%>
 }
 
-grails {
-  <%- if !@mail_config.empty? %>
-  mail {
-    host = "<%= @mail_config['host'] %>"
-    username = "<%= @mail_config['username'] %>"
-    port = <%= @mail_config['port'] %>
-    password = "<%= @mail_config['password'] %>"
-    props = [<% @mail_config['props'].each do |k,v| -%>"<%= k %>":"<%= v %>",<% end %>]
-    default {
-      from = "<%= @mail_config['defaults.from'] %>"
-    }
-  }
-  <%- end -%>
-}
+<%- if @mail_config['host'] %>
+grails.mail.host = "<%= @mail_config['host'] %>"
+<%- end -%>
+<%- if @email_config['port'] %>
+grails.mail.port = "<%= @email_config['port'] %>"
+<%- end -%>
+<%- if @email_config['defaults.from'] %>
+grails.mail.default.from = "<%= @email_config['defaults.from'] %>"
+<%- end -%>
+<%- if @email_config['username'] %>
+grails.mail.username = "<%= @email_config['username'] %>"
+<%- end -%>
+<%- if @email_config['password'] %>
+grails.mail.password = "<%= @email_config['password'] %>"
+<%- end -%>
 
 grails.serverURL = "<%= @grails_server_url %>"
 rundeck.clusterMode.enabled = "<%= @clustermode_enabled %>"
