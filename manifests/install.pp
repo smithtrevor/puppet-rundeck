@@ -9,6 +9,7 @@
 class rundeck::install(
   $jre_name           = $rundeck::jre_name,
   $jre_ensure         = $rundeck::jre_ensure,
+  $jre_manage         = $rundeck::jre_manage,
   $package_source     = $rundeck::package_source,
   $package_ensure     = $rundeck::package_ensure,
   $manage_yum_repo    = $rundeck::manage_yum_repo,
@@ -23,7 +24,9 @@ class rundeck::install(
   $projects_dir = $framework_config['framework.projects.dir']
   $plugin_dir = $framework_config['framework.libext.dir']
 
-  ensure_resource('package', $jre_name, {'ensure' => $jre_ensure} )
+  if $jre_manage {
+    ensure_resource('package', $jre_name, {'ensure' => $jre_ensure} )
+  }
 
   $user = $rundeck::user
   $group = $rundeck::group
