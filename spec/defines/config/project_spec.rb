@@ -16,7 +16,8 @@ describe 'rundeck::config::project', :type => :define do
           :resource_sources => {},
           :node_executor_provider => 'jsch-ssh',
           :user  => 'rundedck',
-          :group => 'rundeck'
+          :group => 'rundeck',
+          :project_ssh_keypath => '/var/lib/rundeck/.ssh/id_rsa'
         }}
 
         let(:facts) {{
