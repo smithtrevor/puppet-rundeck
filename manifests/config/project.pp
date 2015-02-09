@@ -40,6 +40,7 @@ define rundeck::config::project(
   $node_executor_provider = $rundeck::params::node_executor_provider,
   $resource_sources       = $rundeck::params::resource_sources,
   $framework_config       = $rundeck::framework_config,
+  $project_ssh_user       = false,
   $user                   = $rundeck::user,
   $group                  = $rundeck::group
 ) {
@@ -116,6 +117,17 @@ define rundeck::config::project(
     setting => 'project.ssh-keypath',
     value   => $ssh_keypath,
     require => File[$properties_file]
+  }
+
+  if $project_ssh_user {
+    ini_setting { "${name}::project.ssh.user":
+      ensure  => present,
+      path    => $properties_file,
+      section => '',
+      setting => 'project.ssh.user',
+      value   => $project_ssh_user,
+      require => File[$properties_file],
+    }
   }
 
   $resource_source_defaults = {
