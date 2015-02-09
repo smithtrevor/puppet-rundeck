@@ -10,7 +10,6 @@ describe 'rundeck::config::project', :type => :define do
         let(:params) {{
           :framework_config => {
             'framework.projects.dir' => projects_dir,
-            'framework.ssh.keypath'  => '/var/lib/rundeck/.ssh/id_rsa'
           },
           :file_copier_provider => 'jsch-scp',
           :resource_sources => {},
