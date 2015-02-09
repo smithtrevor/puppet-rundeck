@@ -55,6 +55,7 @@ define rundeck::config::project(
   validate_absolute_path($projects_dir)
   validate_re($user, '[a-zA-Z0-9]{3,}')
   validate_re($group, '[a-zA-Z0-9]{3,}')
+  validate_re($project_ssh_user, '[a-zA-Z0-9]{3,}')
 
   $project_dir = "${projects_dir}/${name}"
   $properties_file = "${project_dir}/etc/project.properties"
