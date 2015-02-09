@@ -39,7 +39,8 @@ define rundeck::config::project(
   $project_ssh_user       = false,
   $project_ssh_keypath    = false,
   $user                   = $rundeck::user,
-  $group                  = $rundeck::group
+  $group                  = $rundeck::group,
+  $project_properties     = false,
 ) {
 
   include rundeck::params
@@ -48,14 +49,19 @@ define rundeck::config::project(
 
   $projects_dir     = $framework_properties['framework.projects.dir']
 
-  validate_absolute_path($project_ssh_keypath)
+  if $project_ssh_keypath {
+    validate_absolute_path($project_ssh_keypath)
+  }
   validate_re($file_copier_provider, ['jsch-scp','script-copy','stub'])
   validate_re($node_executor_provider, ['jsch-ssh', 'script-exec', 'stub'])
   validate_hash($resource_sources)
   validate_absolute_path($projects_dir)
   validate_re($user, '[a-zA-Z0-9]{3,}')
   validate_re($group, '[a-zA-Z0-9]{3,}')
-  validate_re($project_ssh_user, '[a-zA-Z0-9]{3,}')
+  
+  if $project_ssh_user {
+    validate_re($project_ssh_user, '[a-zA-Z0-9]{3,}')
+  }
 
   $project_dir = "${projects_dir}/${name}"
   $properties_file = "${project_dir}/etc/project.properties"
@@ -127,6 +133,17 @@ define rundeck::config::project(
       value   => $project_ssh_user,
       require => File[$properties_file],
     }
+  }
+
+  if $project_properties {
+    $project_properties_defaults = {
+      ensure  => present,
+      path    => $properties_file,
+      section => '',
+      require => File[$properties_file],
+    }
+
+    create_resources(ini_setting, $project_properties, $project_properties_defaults)
   }
 
   $resource_source_defaults = {
