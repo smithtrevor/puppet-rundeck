@@ -18,11 +18,7 @@
 #  A hash of rundeck::config::resource_source that will be used to specifiy the node
 #  resources for this project
 #
-# [*ssh_keypath*]
-#   The path the the ssh key that will be used by the ssh/scp providers
 #
-# [*projects_dir*]
-#   The directory where rundeck is configured to store project information
 #
 # === Examples
 #
@@ -41,6 +37,7 @@ define rundeck::config::project(
   $resource_sources       = $rundeck::params::resource_sources,
   $framework_config       = $rundeck::framework_config,
   $project_ssh_user       = false,
+  $project_ssh_keypath    = false,
   $user                   = $rundeck::user,
   $group                  = $rundeck::group
 ) {
@@ -49,10 +46,9 @@ define rundeck::config::project(
 
   $framework_properties = deep_merge($rundeck::params::framework_config, $framework_config)
 
-  $ssh_keypath      = $framework_properties['framework.ssh.keypath']
   $projects_dir     = $framework_properties['framework.projects.dir']
 
-  validate_absolute_path($ssh_keypath)
+  validate_absolute_path($project_ssh_keypath)
   validate_re($file_copier_provider, ['jsch-scp','script-copy','stub'])
   validate_re($node_executor_provider, ['jsch-ssh', 'script-exec', 'stub'])
   validate_hash($resource_sources)
@@ -109,14 +105,16 @@ define rundeck::config::project(
     value   => 'privateKey',
     require => File[$properties_file]
   }
-
-  ini_setting { "${name}::project.ssh-keypath":
-    ensure  => present,
-    path    => $properties_file,
-    section => '',
-    setting => 'project.ssh-keypath',
-    value   => $ssh_keypath,
-    require => File[$properties_file]
+  
+  if $project_ssh_keypath {
+    ini_setting { "${name}::project.ssh-keypath":
+      ensure  => present,
+      path    => $properties_file,
+      section => '',
+      setting => 'project.ssh-keypath',
+      value   => $project_ssh_keypath,
+      require => File[$properties_file]
+    }
   }
 
   if $project_ssh_user {
