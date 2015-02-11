@@ -18,6 +18,16 @@
 #  A hash of rundeck::config::resource_source that will be used to specifiy the node
 #  resources for this project
 #
+# [*project_ssh_user*]
+# username of the ssh_user to set for this project.  This overrides the framework
+# default
+#
+# [*project_ssh_keypath*]
+# keypath for the ssh key to use for the ssh_user.  This overrides the framework
+# default
+# 
+# [*project_properties*]
+# additional properties to include in the project.properties file. 
 #
 #
 # === Examples
@@ -38,8 +48,6 @@ define rundeck::config::project(
   $framework_config       = $rundeck::framework_config,
   $project_ssh_user       = false,
   $project_ssh_keypath    = false,
-  $user                   = $rundeck::user,
-  $group                  = $rundeck::group,
   $project_properties     = false,
 ) {
 
@@ -49,8 +57,14 @@ define rundeck::config::project(
 
   $projects_dir     = $framework_properties['framework.projects.dir']
 
+  $user                   = $rundeck::user
+  $group                  = $rundeck::group
+
   if $project_ssh_keypath {
     validate_absolute_path($project_ssh_keypath)
+  }
+  if $project_properties {
+    validate_hash($project_properties)
   }
   validate_re($file_copier_provider, ['jsch-scp','script-copy','stub'])
   validate_re($node_executor_provider, ['jsch-ssh', 'script-exec', 'stub'])
