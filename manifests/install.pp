@@ -32,6 +32,10 @@ class rundeck::install(
   $user = $rundeck::user
   $group = $rundeck::group
 
+  File { 
+    require => Package['rundeck']
+  }
+
   case $::osfamily {
     'RedHat': {
       if $manage_yum_repo == true {
