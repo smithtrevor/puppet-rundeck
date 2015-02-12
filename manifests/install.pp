@@ -13,7 +13,8 @@ class rundeck::install(
   $package_source     = $rundeck::package_source,
   $package_ensure     = $rundeck::package_ensure,
   $manage_yum_repo    = $rundeck::manage_yum_repo,
-  $rdeck_home         = $rundeck::rdeck_home
+  $rdeck_home         = $rundeck::rdeck_home,
+  $rdeck_base         = $rundeck::rdeck_base
 ) {
 
   if $caller_module_name != $module_name {
@@ -80,6 +81,20 @@ class rundeck::install(
     mode   => '0755',
   }
 
+  file { $rdeck_base:
+    ensure => directory,
+    owner  => $user,
+    group  => $group,
+    mode   => '0755',
+  }
+
+  file { $plugin_dir:
+    ensure  => directory,
+    owner   => $user,
+    group   => $group,
+    mode    => '0755',
+    require => File[$rdeck_base],
+  }
+
   ensure_resource(file, $projects_dir, {'ensure' => 'directory', 'owner' => $user, 'group' => $group})
-  ensure_resource(file, $plugin_dir, {'ensure'   => 'directory', 'owner' => $user, 'group' => $group})
 }
